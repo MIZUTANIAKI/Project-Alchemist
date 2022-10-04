@@ -72,22 +72,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(DXLIB_DIR);$(IncludePath)</IncludePath>
+    <IncludePath>$(DXLIB_DIR);$(SolutionDir);$(SolutionDir)Scene\;$(SolutionDir)Mng\;$(SolutionDir)common\;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXLIB_DIR);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(DXLIB_DIR);$(IncludePath)</IncludePath>
+    <IncludePath>$(DXLIB_DIR);$(SolutionDir);$(SolutionDir)Scene\;$(SolutionDir)Mng\;$(SolutionDir)common\;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXLIB_DIR);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(DXLIB_DIR);$(IncludePath)</IncludePath>
+    <IncludePath>$(DXLIB_DIR);$(SolutionDir);$(SolutionDir)Scene\;$(SolutionDir)Mng\;$(SolutionDir)common\;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXLIB_DIR);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(DXLIB_DIR);$(IncludePath)</IncludePath>
+    <IncludePath>$(DXLIB_DIR);$(SolutionDir);$(SolutionDir)Scene\;$(SolutionDir)Mng\;$(SolutionDir)common\;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXLIB_DIR);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -151,7 +151,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="common\FPSKeeper.cpp" />
+    <ClCompile Include="common\WFUtility.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mng\CronoMng.cpp" />
+    <ClCompile Include="Mng\ImageMng.cpp" />
+    <ClCompile Include="Mng\KeyMng.cpp" />
+    <ClCompile Include="Mng\ReadMng.cpp" />
+    <ClCompile Include="Mng\SoundMng.cpp" />
+    <ClCompile Include="Scene\BaseScene.cpp" />
+    <ClCompile Include="Scene\sceneMng.cpp" />
+    <ClCompile Include="Scene\TitleScene.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\FPSKeeper.h" />
+    <ClInclude Include="common\Vector2.h" />
+    <ClInclude Include="common\WFUtility.h" />
+    <ClInclude Include="Mng\CronoMng.h" />
+    <ClInclude Include="Mng\ImageMng.h" />
+    <ClInclude Include="Mng\KeyMng.h" />
+    <ClInclude Include="Mng\ReadMng.h" />
+    <ClInclude Include="Mng\SoundMng.h" />
+    <ClInclude Include="Scene\BaseScene.h" />
+    <ClInclude Include="Scene\sceneMng.h" />
+    <ClInclude Include="Scene\TitleScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
