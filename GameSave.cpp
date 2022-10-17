@@ -2,6 +2,7 @@
 
 GameSave::GameSave()
 {
+	isDateFinish_ = true;
 }
 
 GameSave::~GameSave()
