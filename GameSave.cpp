@@ -1,22 +1,14 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <stdio.h>
+#include <Windows.h>
 #include "GameSave.h"
 
 GameSave::GameSave()
 {
-	isDateFinish_ = true;
+	GetSaveFileNum();
 	InitGameDate();
-	savedate_.item.emplace_back(0);
-	savedate_.item.emplace_back(120);
-	savedate_.item.emplace_back(150);
-	savedate_.item.emplace_back(999);
-	savedate_.playerEquipment.at(Equipment::headEquipmentID) = 995;
-	savedate_.playerEquipment.at(Equipment::bodyEquipmentID) = 996;
-	savedate_.playerEquipment.at(Equipment::handEquipmentID) = 997;
-	savedate_.playerEquipment.at(Equipment::legsEquipmentID) = 998;
-	savedate_.playerEquipment.at(Equipment::mainWeaponID) = 999;
-	savedate_.Money = 999999;
 }
 
 void GameSave::InitGameDate()
@@ -54,45 +46,82 @@ GameSave::~GameSave()
 {
 }
 
-void GameSave::LoadDate()
+int GameSave::GetSaveFileNum()
 {
-	InitGameDate();
-	LoadingSaveDate();
+	if (saveDataNumber_.size() != 0)
+	{
+		return saveDataNumber_.size();
+	}
+	{
+		std::string fileline;
+		std::ofstream file("tmp.bat");
+		fileline = "@echo off";
+		file << fileline << std::endl;
+		fileline = "cd SaveDate";
+		file << fileline << std::endl;
+		fileline = "dir /b dat?.sav > ../list.tmp";
+		file << fileline << std::endl;
+		fileline = "cd ../";
+		file << fileline << std::endl;
+		fileline = "move list.tmp temp";
+		file << fileline << std::endl;
+		fileline = "EXIT";
+		file << fileline << std::endl;
+		file.close();
+	}
+	system("start /b tmp.bat");
+	Sleep(60*10);
+	{
+		std::ifstream file;
+		file.open("./temp/list.tmp");
+		if (file)
+		{
+			std::string str;
+			while (!file.eof())
+			{
+				file >> str;
+				saveDataNumber_.try_emplace(str, false);
+			}
+		}
+	}
+	DeleteFileA("tmp.bat");
+	DeleteFileA("./temp/list.tmp");
+	return saveDataNumber_.size();
 }
 
-bool GameSave::CheckLoadFinish()
+void GameSave::LoadDate(int num)
 {
-	return isDateFinish_;
+	InitGameDate();
+	LoadingSaveDate(num);
 }
 
 SaveFileD GameSave::GetDate()
 {
-	if (isDateFinish_)
-	{
-		return savedate_;
-	}
-	return SaveFileD();
+	return savedate_;
 }
 
 void GameSave::WriteDate(SaveFileD& date, int num)
 {
-	if (isDateFinish_)
+	if (num > saveDataNumber_.size())
 	{
-		savedate_ = date;
-		WritingSaveDate(num);
+		saveDataNumber_.clear();
 	}
+	//savedate_ = date;
+	WritingSaveDate(num);
 }
 
-void GameSave::LoadingSaveDate()
+void GameSave::LoadingSaveDate(int num)
 {
-	isDateFinish_ = false;
 	
 	//読み込み開始
 	{
 		//ここにセーブデータ読み込み処理
 		std::fstream file;
 		//std::fstream gameStoryID, playerEquipment, playerItem, farmChipDate, dailyQuest, upgradeResult, npcEquipment, Money, item;
-		file.open("./SaveDate/dat1.sav", std::ios::binary | std::ios::in);
+		std::ostringstream tmpNum;
+		tmpNum << num;
+		std::string filename = "./SaveDate/dat" + tmpNum.str() + ".sav";
+		file.open(filename, std::ios::binary | std::ios::in);
 		//gameStoryID.open("./SaveDate/dat1_1.sav", std::ios::binary | std::ios::in);
 		//playerEquipment.open("./SaveDate/dat1_2.sav", std::ios::binary | std::ios::in);
 		//playerItem.open("./SaveDate/dat1_3.sav", std::ios::binary | std::ios::in);
@@ -165,20 +194,19 @@ void GameSave::LoadingSaveDate()
 	}
 
 	//読み込み終了
-	isDateFinish_ = true;
 }
 
-void GameSave::WritingSaveDate(int num))
+void GameSave::WritingSaveDate(int num)
 {
-	isDateFinish_ = false;
-
 	//書き込み開始
 	{
 		//ここにセーブデータ書き込み処理
 		std::fstream file;
 		//std::fstream gameStoryID, playerEquipment, playerItem, farmChipDate, dailyQuest, upgradeResult, npcEquipment, Money, item;
-		std::string filename = "./SaveDate/dat"+  num + ".sav";
-		file.open("./SaveDate/dat.sav", std::ios::binary | std::ios::out);
+		std::ostringstream tmpNum;
+		tmpNum << num;
+		std::string filename = "./SaveDate/dat"+ tmpNum.str() + ".sav";
+		file.open(filename, std::ios::binary | std::ios::out);
 		//gameStoryID.open("./SaveDate/dat1_1.sav", std::ios::binary | std::ios::out);
 		//playerEquipment.open("./SaveDate/dat1_2.sav", std::ios::binary | std::ios::out);
 		//playerItem.open("./SaveDate/dat1_3.sav", std::ios::binary | std::ios::out);
@@ -234,5 +262,4 @@ void GameSave::WritingSaveDate(int num))
 	}
 
 	//書き込み終了
-	isDateFinish_ = true;
 }

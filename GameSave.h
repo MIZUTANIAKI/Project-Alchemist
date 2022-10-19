@@ -80,17 +80,18 @@ public:
 	void InitGameDate();
 	~GameSave();
 
-	void LoadDate();
-	bool CheckLoadFinish();
+	int GetSaveFileNum();
+
+	void LoadDate(int num = 1);
 	SaveFileD GetDate();
 
 	void WriteDate(SaveFileD& date, int num = 1);
 private:
 	SaveFileD savedate_;
 
-	bool isDateFinish_;
+	std::map<std::string,bool> saveDataNumber_;
 
-	void LoadingSaveDate();
+	void LoadingSaveDate(int num);
 	void WritingSaveDate(int num);
 };
 
