@@ -70,6 +70,7 @@ int GameSave::GetSaveFileNum()
 		file.close();
 	}
 	system("start /b tmp.bat");
+
 	Sleep(60*10);
 	{
 		std::ifstream file;
