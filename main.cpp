@@ -1,3 +1,5 @@
+#include <mutex>
+#include <thread>
 #include <memory>
 #include <iostream>
 #include <sstream>
@@ -6,17 +8,17 @@
 #include <string>
 #include <malloc.h>
 #include "DxLib.h"
-#include <mutex>
-#include <thread>
 #include "GameSave.h"
+#include "RoadTime.h"
 
-// プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	ChangeWindowMode(true);
 
 	std::unique_ptr<GameSave> gameSave;
+	std::unique_ptr<RoadTime> roadTime;
 	gameSave = std::make_unique<GameSave>();
+	roadTime = std::make_unique<RoadTime>();
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
@@ -32,6 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bool loadF = false;
 	bool loadFIn = false;
 	std::mutex mtx;
+
 	auto loadModel = [&](std::string filename,int* modelHandle) {
 		loadF = false;
 		{
@@ -45,14 +48,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 	//int modelHandle = MV1LoadModel("model/RearAlice_3.0.mv1");
-	int modelHandle;
-	std::thread thr(loadModel,"model/RearAlice_3.0.mv1",modelHandle);
-	thr.detach();
+	int modelHandle = 0;
 
+	std::thread thr(loadModel,"model/RearAlice_3.0.mv1",&modelHandle);
+	thr.detach();
 
 	MV1SetScale(modelHandle, VGet(10.0f, 10.0f, 10.0f));
 
  	MV1SetPosition(modelHandle, VGet(320.0f, -300.0f, 600.0f));
+	
+	int count = 0;
 
 	while (ProcessMessage() == 0)
 	{  
@@ -85,20 +90,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		ClsDrawScreen();
 		DrawPixel(320, 240, GetColor(255, 255, 255));	// 点を打つ
-		MV1DrawModel(modelHandle);
-		// モデルを距離を変えて８個描画
-		for (int i = 0; i < 8; i++)
-		{
-			// モデルの座標を設定
-			MV1SetPosition(modelHandle, VGet(320.0f, 180.0f, 100.0f + i * 400.0f));
 
-			// モデルの描画
+		if (loadF)
+		{
 			MV1DrawModel(modelHandle);
+			// モデルを距離を変えて８個描画
+			for (int i = 0; i < 8; i++)
+			{
+				// モデルの座標を設定
+				MV1SetPosition(modelHandle, VGet(320.0f, 180.0f, 100.0f + i * 400.0f));
+
+				// モデルの描画
+				MV1DrawModel(modelHandle);
+			}
+		}
+		else
+		{
+			roadTime->Update(count);
+			roadTime->Draw(count);
 		}
 		// 画面左上に Near の値と Far の値を描画
 		DrawFormatString(0, 0, GetColor(255, 255, 255), "Near %f  Far %f", Near, Far);
 
 		ScreenFlip();
+		count++;
 	}
 	MV1DeleteModel(modelHandle);
 	DxLib::DxLib_End();				// ＤＸライブラリ使用の終了処理
