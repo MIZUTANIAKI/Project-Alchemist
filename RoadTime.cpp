@@ -2,9 +2,9 @@
 #include "RoadTime.h"
 #include "WFUtility.h"
 
-RoadTime::RoadTime(int num)
+RoadTime::RoadTime()
 {
-	Init(num);
+	Init();
 	time_ = 0;
 	rsita_ = 0;
 }
@@ -15,9 +15,9 @@ RoadTime::~RoadTime()
 
 void RoadTime::Update(float deltaTime)
 {
-	time_ += deltaTime;
+	time_ = deltaTime;
 	//rsita_ = time_;
-	rsita_ += 60 * deltaTime;
+	rsita_ += time_ % 360;
 	if (rsita_ > 360)
 	{
 		rsita_ = 0;
@@ -58,7 +58,7 @@ void RoadTime::Draw(float deltaTime)
 	//lpImglMng.ScreenAddDrawQue(screenH_, 0);
 }
 
-void RoadTime::Init(int num)
+void RoadTime::Init(void)
 {
 	GetDrawScreenSize(&screenSize_.x, &screenSize_.y);
 	screenH_ = MakeScreen(screenSize_.x, screenSize_.y, true);

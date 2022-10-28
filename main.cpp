@@ -45,12 +45,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		loadF = true;
 	};
 
-
-
 	//int modelHandle = MV1LoadModel("model/RearAlice_3.0.mv1");
 	int modelHandle = 0;
 
-	std::thread thr(loadModel,"model/RearAlice_3.0.mv1",&modelHandle);
+	std::thread thr(loadModel,"model/Isabel.mv1",&modelHandle);
 	thr.detach();
 
 	MV1SetScale(modelHandle, VGet(10.0f, 10.0f, 10.0f));

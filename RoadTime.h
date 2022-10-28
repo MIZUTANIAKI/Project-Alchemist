@@ -4,18 +4,18 @@
 class RoadTime
 {
 public:
-	RoadTime(int num);
+	RoadTime();
 	~RoadTime();
 
 	void Update(float deltaTime);
 
 	void Draw(float deltaTime);
-	void Init(int num);
+	void Init(void);
 
 private:
 	int screenH_;
 	Vector2 screenSize_;
 
 	float rsita_;
-	float time_;
+	int time_;
 };
