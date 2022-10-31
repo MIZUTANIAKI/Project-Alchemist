@@ -79,19 +79,41 @@ public:
 	GameSave();
 	void InitGameDate();
 	~GameSave();
-
+	/// <summary>
+	/// セーブファイルがいくつあるかを調べる
+	/// </summary>
+	/// <returns></returns>
 	int GetSaveFileNum();
-
+	/// <summary>
+	/// [引数]番のセーブデータを読み込む初期値は1番データ
+	/// </summary>
+	/// <param name="num">セーブデータ番号</param>
 	void LoadDate(int num = 1);
+	/// <summary>
+	/// セーブデータ受け取り処理
+	/// </summary>
+	/// <returns>セーブデータ</returns>
 	SaveFileD GetDate();
-
+	/// <summary>
+	/// [引数2]番セーブに[引数1]のデータをセーブします。
+	/// </summary>
+	/// <param name="date">セーブデータ</param>
+	/// <param name="num">セーブデータ番号</param>
 	void WriteDate(SaveFileD& date, int num = 1);
 private:
 	SaveFileD savedate_;
 
 	std::map<std::string,bool> saveDataNumber_;
 
+	/// <summary>
+	/// セーブデータロード関数本体
+	/// </summary>
+	/// <param name="num">セーブデータ番号</param>
 	void LoadingSaveDate(int num);
+	/// <summary>
+	/// セーブデータ書き込み関数本体
+	/// </summary>
+	/// <param name="num">セーブデータ番号</param>
 	void WritingSaveDate(int num);
 };
 

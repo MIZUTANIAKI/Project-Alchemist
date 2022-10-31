@@ -159,19 +159,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="common\FPSKeeper.cpp" />
     <ClCompile Include="common\WFUtility.cpp" />
     <ClCompile Include="GameSave.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mng\CronoMng.cpp" />
+    <ClCompile Include="ModelLoad.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RoadTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="common\FPSKeeper.h" />
     <ClInclude Include="common\Vector2.h" />
     <ClInclude Include="common\WFUtility.h" />
     <ClInclude Include="GameSave.h" />
     <ClInclude Include="Mng\CronoMng.h" />
+    <ClInclude Include="ModelLoad.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RoadTime.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

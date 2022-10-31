@@ -1,5 +1,3 @@
-#include <mutex>
-#include <thread>
 #include <memory>
 #include <iostream>
 #include <sstream>
@@ -10,110 +8,95 @@
 #include "DxLib.h"
 #include "GameSave.h"
 #include "RoadTime.h"
+#include "Player.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	ChangeWindowMode(true);
 
 	std::unique_ptr<GameSave> gameSave;
-	std::unique_ptr<RoadTime> roadTime;
-	gameSave = std::make_unique<GameSave>();
-	roadTime = std::make_unique<RoadTime>();
-
-	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
+	std::unique_ptr<Player> player;
+	if (DxLib_Init() == -1)
 	{
-		return -1;			// エラーが起きたら直ちに終了
+		return -1;
 	}
 
 	SetDrawScreen(DX_SCREEN_BACK);
+	gameSave = std::make_unique<GameSave>();
+	player = std::make_unique<Player>();
 
-	float Near, Far;
-	// Near Far 値の初期化
-	Near = 100.0f;
-	Far = 2000.0f;
-	bool loadF = false;
-	bool loadFIn = false;
-	std::mutex mtx;
+	SetBackgroundColor(123, 123, 123);
 
-	auto loadModel = [&](std::string filename,int* modelHandle) {
-		loadF = false;
-		{
-			mtx.lock();
-			*modelHandle = MV1LoadModel(filename.c_str());
-			mtx.unlock();
-		}
-		loadF = true;
-	};
+	//float camNear, camFar;
+	//camNear = 100.0f;
+	//camFar = 2000.0f;
 
-	//int modelHandle = MV1LoadModel("model/RearAlice_3.0.mv1");
-	int modelHandle = 0;
-
-	std::thread thr(loadModel,"model/Isabel.mv1",&modelHandle);
-	thr.detach();
-
-	MV1SetScale(modelHandle, VGet(10.0f, 10.0f, 10.0f));
-
- 	MV1SetPosition(modelHandle, VGet(320.0f, -300.0f, 600.0f));
-	
 	int count = 0;
 
+	//SetUseZBufferFlag(TRUE);
+
 	while (ProcessMessage() == 0)
-	{  
-		// 上下のキー入力で Far を操作
-		if (CheckHitKey(KEY_INPUT_UP) == 1)
-		{
-			Far += 20.0f;
-		}
-		if (CheckHitKey(KEY_INPUT_DOWN) == 1)
-		{
-			Far -= 20.0f;
-		}
-		// 左右のキーで Near を操作
-		if (CheckHitKey(KEY_INPUT_LEFT) == 1)
-		{
-			Near -= 20.0f;
-		}
-		if (CheckHitKey(KEY_INPUT_RIGHT) == 1)
-		{
-			Near += 20.0f;
-		}
-		// Near の値が 0.0f 以下になっていたら補正
-		if (Near <= 0.0f) Near = 10.0f;
+	{
+		//プレイヤー更新
+		player->Update();
 
-		// Far の値が Near より小さくなっていたら補正
-		if (Far <= Near) Far = Near + 10.0f;
+		//// Near/Far
+		//if (CheckHitKey(KEY_INPUT_UP) == 1)
+		//{
+		//	camFar += 20.0f;
+		//}
+		//if (CheckHitKey(KEY_INPUT_DOWN) == 1)
+		//{
+		//	camFar -= 20.0f;
+		//}
+		//if (CheckHitKey(KEY_INPUT_LEFT) == 1)
+		//{
+		//	camNear -= 20.0f;
+		//}
+		//if (CheckHitKey(KEY_INPUT_RIGHT) == 1)
+		//{
+		//	camNear += 20.0f;
+		//}
+		//if (camNear <= 0.0f) camNear = 10.0f;
+		//if (camFar <= camNear) camFar = camNear + 10.0f;
 
-		// Near, Far クリップの距離を設定
-		SetCameraNearFar(Near, Far);
+		////クリップ調節
+		//SetCameraNearFar(camNear, camFar);
 
 		ClsDrawScreen();
-		DrawPixel(320, 240, GetColor(255, 255, 255));	// 点を打つ
-
-		if (loadF)
+		//ガイド線を描画
 		{
-			MV1DrawModel(modelHandle);
-			// モデルを距離を変えて８個描画
-			for (int i = 0; i < 8; i++)
+			VECTOR pos1;
+			VECTOR pos2;
+			for (int x = 0; x < 30; x++)
 			{
-				// モデルの座標を設定
-				MV1SetPosition(modelHandle, VGet(320.0f, 180.0f, 100.0f + i * 400.0f));
-
-				// モデルの描画
-				MV1DrawModel(modelHandle);
+				for (int z = 0; z < 30; z++)
+				{
+					pos1 = VGet(x * 100 - 1000, 0, z * 100 - 1000);
+					pos2 = VGet(x * 100 + 1000, 0, z * 100 - 1000);
+					DrawLine3D(pos1, pos2, 0xff);
+					pos1 = VGet(x * 100 - 1000, 0, z * 100 - 1000);
+					pos2 = VGet(x * 100 - 1000, 0, z * 100 + 1000);
+					DrawLine3D(pos1, pos2, 0xff0000);
+				}
 			}
 		}
-		else
-		{
-			roadTime->Update(count);
-			roadTime->Draw(count);
-		}
-		// 画面左上に Near の値と Far の値を描画
-		DrawFormatString(0, 0, GetColor(255, 255, 255), "Near %f  Far %f", Near, Far);
+
+		//プレイヤー描画
+		player->Draw();
+
+		// 点を打つ
+		DrawPixel(320, 240, GetColor(255, 255, 255));
+		//クロスカーソルを描画
+		DrawLine(320, 240 - 20, 320, 240 + 20, 0xff0000);
+		DrawLine(320 - 20, 240, 320 + 20, 240, 0xff0000);
+
+		//// 画面左上に Near の値と Far の値を描画
+		//DrawFormatString(0, 0, GetColor(255, 255, 255), "Near %f  Far %f", camNear, camFar);
 
 		ScreenFlip();
 		count++;
 	}
-	MV1DeleteModel(modelHandle);
 	DxLib::DxLib_End();				// ＤＸライブラリ使用の終了処理
 
 	return 0;				// ソフトの終了 
