@@ -84,18 +84,18 @@ void Camera::Update(int model)
 	}
 	if (CheckHitKey(KEY_INPUT_LEFT) == 1)
 	{
-		cameraHAngle_ -= CAMERA_ANGLE_SPEED;
-		if (cameraHAngle_ <= -180.0f)
-		{
-			cameraHAngle_ += 360.0f;
-		}
-	}
-	if (CheckHitKey(KEY_INPUT_RIGHT) == 1)
-	{
 		cameraHAngle_ += CAMERA_ANGLE_SPEED;
 		if (cameraHAngle_ >= 180.0f)
 		{
 			cameraHAngle_ -= 360.0f;
+		}
+	}
+	if (CheckHitKey(KEY_INPUT_RIGHT) == 1)
+	{
+		cameraHAngle_ -= CAMERA_ANGLE_SPEED;
+		if (cameraHAngle_ <= -180.0f)
+		{
+			cameraHAngle_ += 360.0f;
 		}
 	}
 
@@ -106,24 +106,24 @@ void Camera::Update(int model)
 		moveFlag_ = TRUE;
 		moveVector_.z = MOVESPEED;
 	}
-	if (CheckHitKey(KEY_INPUT_S) == 1)
-	{
-		angle_ = 0.0f - cameraHAngle_;
-		moveFlag_ = TRUE;
-		moveVector_.z = -MOVESPEED;
-	}
-	if (CheckHitKey(KEY_INPUT_A) == 1)
-	{
-		angle_ = 90.0f - cameraHAngle_;
-		moveFlag_ = TRUE;
-		moveVector_.x = -MOVESPEED;
-	}
-	if (CheckHitKey(KEY_INPUT_D) == 1)
-	{
-		angle_ = -90.0f - cameraHAngle_;
-		moveFlag_ = TRUE;
-		moveVector_.x = MOVESPEED;
-	}
+	//if (CheckHitKey(KEY_INPUT_S) == 1)
+	//{
+	//	angle_ = 0.0f - cameraHAngle_;
+	//	moveFlag_ = TRUE;
+	//	moveVector_.z = -MOVESPEED;
+	//}
+	//if (CheckHitKey(KEY_INPUT_A) == 1)
+	//{
+	//	angle_ = 90.0f - cameraHAngle_;
+	//	moveFlag_ = TRUE;
+	//	moveVector_.x = -MOVESPEED;
+	//}
+	//if (CheckHitKey(KEY_INPUT_D) == 1)
+	//{
+	//	angle_ = -90.0f - cameraHAngle_;
+	//	moveFlag_ = TRUE;
+	//	moveVector_.x = MOVESPEED;
+	//}
 
 	//ˆÚ“®’†‚È‚ç
 	if (moveFlag_ == TRUE)

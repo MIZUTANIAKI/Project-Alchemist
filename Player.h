@@ -1,8 +1,13 @@
 #pragma once
 #include <DxLib.h>
 #include <memory>
+#include <array>
 class ModelLoad;
 class Camera;
+
+//////////////////// TO DO
+// プレイヤーのインベントリを作るのだ！！！！！
+
 
 //キャラクターとしてのプレイヤークラス
 class Player
@@ -30,5 +35,6 @@ private:
 	int modelHandl_;
 	std::unique_ptr<ModelLoad> load_;
 	std::unique_ptr<Camera> camera_;
+	std::array<int, 32> itemInventory_;
 };
 
