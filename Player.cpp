@@ -15,7 +15,6 @@ Player::~Player()
 
 void Player::Init(void)
 {
-	//初期化
 
 	//モデルのロード開始
 	load_ = std::make_unique<ModelLoad>();
@@ -44,3 +43,5 @@ void Player::Draw(void)
 		MV1DrawModel(modelHandl_);
 	}
 }
+
+	//初期化
