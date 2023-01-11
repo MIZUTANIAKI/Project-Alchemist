@@ -168,19 +168,35 @@
     <ClCompile Include="Mng\CronoMng.cpp" />
     <ClCompile Include="ModelLoad.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Puzzle\MinoDate.cpp" />
+    <ClCompile Include="Puzzle\MinoTemplate.cpp" />
+    <ClCompile Include="Puzzle\PosDate.cpp" />
+    <ClCompile Include="Puzzle\Puzzle.cpp" />
     <ClCompile Include="RoadTime.cpp" />
+    <ClCompile Include="WorldDate\Constellation.cpp" />
+    <ClCompile Include="WorldDate\DateSystem.cpp" />
+    <ClCompile Include="WorldDate\SeasonSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="common\FPSKeeper.h" />
     <ClInclude Include="common\Vector2.h" />
     <ClInclude Include="common\WFUtility.h" />
+    <ClInclude Include="common\WFUtilitySTR.h" />
     <ClInclude Include="GameSave.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Mng\CronoMng.h" />
     <ClInclude Include="ModelLoad.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Puzzle\EnumTypeList.h" />
+    <ClInclude Include="Puzzle\MinoDate.h" />
+    <ClInclude Include="Puzzle\MinoTemplate.h" />
+    <ClInclude Include="Puzzle\PosDate.h" />
+    <ClInclude Include="Puzzle\Puzzle.h" />
     <ClInclude Include="RoadTime.h" />
+    <ClInclude Include="WorldDate\Constellation.h" />
+    <ClInclude Include="WorldDate\DateSystem.h" />
+    <ClInclude Include="WorldDate\SeasonSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
